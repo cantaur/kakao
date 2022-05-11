@@ -10,6 +10,24 @@
     <title>알림톡 API</title>
     <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
 </head>
+<style>
+    button {
+        background-color: #F7E600;
+        border:none;
+        padding:10px 16px;
+        border-radius: 4px;
+        margin:4px;
+        color: #3A1D1D;
+        cursor: pointer;
+        display: inline-block;
+        font-weight: bolder;
+        font-size: 14px;
+    }
+    button.friends {
+        background-color: #3A1D1D;
+        color: #F7E600;
+    }
+</style>
 
   
 <body>
@@ -17,12 +35,70 @@
     <a id="kakao-link-btn" href="javascript:kakaoShare()">
         <img src="https://developers.kakao.com/assets/img/about/logos/kakaolink/kakaolink_btn_medium.png" />
     </a>
-    <h3>카카오톡 메시지 API</h3>
+    <h3>카카오톡 메시지 API(JavaScript)</h3>
     <a id="send-to-btn" href="javascript:sendTo()">
         <img src="//k.kakaocdn.net/14/dn/btqc6xrxbuT/7VJk7YSWITkz9K9pbXEffk/o.jpg" alt="나에게 보내기 버튼" />
     </a>
+    <h3>친구목록 가져오기 API(JavaScript)</h3>
+    <button class="friends" onclick="getFriends()">친구 목록 가져오기</button>
+    <ul id="friend-list"></ul>
 </body>
 
+
+<script type="text/javascript">
+  function sendMessage(id) {
+    if (confirm('메시지를 전송하겠습니까?')) {
+        Kakao.API.request({
+            url: '/v1/api/talk/friends/message/default/send',
+            data: {
+            receiver_uuids: [id],
+            template_object: {
+                object_type: 'feed',
+                content: {
+                title: '베리베리 치즈 케익',
+                description:
+                    '#케익 #딸기 #블루베리 #카페 #디저트 #달달함 #분위기 #삼평동',
+                image_url:
+                    'http://k.kakaocdn.net/dn/bDgfik/btqwQWk4CRU/P6wNJJiQ3Ko21KNE1TiLw1/kakaolink40_original.png',
+                link: {
+                    mobile_web_url: 'https://developers.kakao.com',
+                    web_url: 'https://developers.kakao.com',
+                },
+                },
+                social: {
+                like_count: 286,
+                comment_count: 45,
+                shared_count: 845,
+                },
+                buttons: [
+                {
+                    title: '웹으로 보기',
+                    link: {
+                    mobile_web_url: 'https://developers.kakao.com',
+                    web_url: 'https://developers.kakao.com',
+                    },
+                },
+                {
+                    title: '앱으로 보기',
+                    link: {
+                    mobile_web_url: 'https://developers.kakao.com',
+                    web_url: 'https://developers.kakao.com',
+                    },
+                },
+                ],
+            },
+            },
+            success: function (res) {
+            alert('메시지 전송이 완료되었습니다. \n' + JSON.stringify(res))
+            },
+            fail: function (err) {
+            alert('메시지 전송에 실패했습니다. \n' + JSON.stringify(err))
+            },
+        })
+    }
+  }
+
+</script>
  
 
 <script type="text/javascript">
@@ -123,6 +199,48 @@
             },
         })
     }
+
+
+
+    function getFriends() {
+        document.getElementById('friend-list').innerHTML = ''
+        Kakao.Auth.login({
+            scope: 'friends,talk_message',
+            success: function (res) {
+                Kakao.API.request({
+                    url: '/v1/api/talk/friends',
+                    success: function (res) {
+                        if (res.elements.length > 0) {
+                            for (let i = 0, item; (item = res.elements[i]); i++) {
+                                const friendElement = document.createElement('li')
+                                const profileImg = item.profile_thumbnail_image
+                                ? item.profile_thumbnail_image
+                                : 'http://k.kakaocdn.net/dn/1xGCm/btqwLTjcNzV/orvxGiWth8JR20SgUcDNKK/kakaolink40_original.jpg'
+
+                                friendElement.innerHTML = '<div class="friend">'
+                                + '<img src="' + profileImg + '" alt="프로필 이미지">'
+                                + '<strong>' + item.profile_nickname + '</strong>'
+                                + '</div>'
+                                + '<button onclick="sendMessage(\'' + item.uuid + '\')">전송</button>'
+                                document
+                                .getElementById('friend-list')
+                                .appendChild(friendElement)
+                            }
+                        } else {
+                            document.getElementById('friend-list').innerHTML =
+                            '앱에 연결된 친구가 없습니다. 앱에 연결된 친구만 조회할 수 있습니다.'
+                        }
+                    },
+                    fail: function (err) {
+                        document.getElementById('friend-list').innerHTML = JSON.stringify(err)
+                    },
+                })
+            },
+        })
+    }
+
+
+
 
 
 </script>

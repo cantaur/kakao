@@ -29,20 +29,6 @@ app.get('/message', (req, res) => {
     res.sendFile(__dirname+'/message.html')
 })
 
-async function call(method, uri, param, header) {
-    try {
-        resp = await axios({
-            method: method,
-            url: uri,
-            headers: header,
-            data: param
-        })
-    } catch (error) {
-        resp = err.response;
-    }
-    return resp.data;
-}
-
 app.get('/auth', (req, res) => {
     console.log("kakao login start");
     res.send(`https://kauth.kakao.com/oauth/authorize?client_id=${client_id}&redirect_uri=${redirect_uri}&response_type=code`);
@@ -57,10 +43,10 @@ app.get('/login_success', async (req, res) => {
         url: token_uri,
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         data: qs.stringify({
-        grant_type: 'authorization_code',
-        client_id: client_id,
-        redirect_url: redirect_uri,
-        code: req.query.code,
+            grant_type: 'authorization_code',
+            client_id: client_id,
+            redirect_url: redirect_uri,
+            code: req.query.code,
         }),
     }
     try {
@@ -68,9 +54,9 @@ app.get('/login_success', async (req, res) => {
         req.session.key = respToken.data.access_token;
         const msgResult = await sendMessage(req.session.key);
         if (msgResult === 0) {
-          res.send(resultScript('성공'));
+            res.send(resultScript('성공'));
         } else {
-          res.send(resultScript('실패'));
+            res.send(resultScript('실패'));
         }
     } catch(e){
         console.log('error');
@@ -85,33 +71,33 @@ const sendMessage = async (sessionKey) => {
     const webUrl = 'http://www.eveningbread.com/';
     try {
         const result = await request({
-          uri: 'https://kapi.kakao.com/v2/api/talk/memo/default/send', 
-          method: 'POST',
-          headers: {
-              'Content-Type': 'application/x-www-form-urlencoded',
-              'Authorization': `Bearer ${token}`
-          },
-          form: {
-              template_object: JSON.stringify({
-              object_type: 'feed',
-              content: {
-                  title: '갓 구운 빵처럼 맛있게 구워드립니다 "맛있는 ICT 기술"',
-                  description: '사용자 경험이 무엇보다 중요한 모바일 환경에서 이브닝브레드의 UX/UI 설계 능력은 고객에게 더 나은 경험을 제공합니다.',
-                  image_url: 'http://k.kakaocdn.net/dn/Q2iNx/btqgeRgV54P/VLdBs9cvyn8BJXB3o7N8UK/kakaolink40_original.png',
-                  link: {
-                      mobileWebUrl: webUrl,
-                      webUrl: webUrl,
-                  },
-              },
-              buttons: [{
-                  title: '자세히보기',
-                  link: {
-                  mobileWebUrl: webUrl,
-                  webUrl: webUrl,
-                  },
-              },],
-              })
-          }
+            uri: 'https://kapi.kakao.com/v2/api/talk/memo/default/send', 
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'Authorization': `Bearer ${token}`
+            },
+            form: {
+                template_object: JSON.stringify({
+                    object_type: 'feed',
+                    content: {
+                        title: '갓 구운 빵처럼 맛있게 구워드립니다 "맛있는 ICT 기술"',
+                        description: '사용자 경험이 무엇보다 중요한 모바일 환경에서 이브닝브레드의 UX/UI 설계 능력은 고객에게 더 나은 경험을 제공합니다.',
+                        image_url: 'http://k.kakaocdn.net/dn/Q2iNx/btqgeRgV54P/VLdBs9cvyn8BJXB3o7N8UK/kakaolink40_original.png',
+                        link: {
+                            mobileWebUrl: webUrl,
+                            webUrl: webUrl,
+                        },
+                    },
+                    buttons: [{
+                        title: '자세히보기',
+                        link: {
+                        mobileWebUrl: webUrl,
+                        webUrl: webUrl,
+                        },
+                    },],
+                })
+            }
         })
         return Number(JSON.parse(result).result_code);
     } catch(e) {
@@ -120,43 +106,9 @@ const sendMessage = async (sessionKey) => {
         return false;
     }
 }
-//http://localhost:3000/auth
+
 server.listen(3000, ()=>{
     console.log('서버 동작중...');
 });
 
 
-
-
-
-
-// const webUrl = 'http://www.eveningbread.com/';
-// request({
-//   uri: 'https://kapi.kakao.com/v2/api/talk/memo/default/send', 
-//   method: 'POST',
-//   headers: {
-//     'Content-Type': 'application/x-www-form-urlencoded',
-//     'Authorization': `Bearer ${respToken.data.access_token}`
-//   },
-//   form: {
-//     template_object: JSON.stringify({
-//       object_type: 'feed',
-//       content: {
-//         title: '갓 구운 빵처럼 맛있게 구워드립니다 "맛있는 ICT 기술"',
-//         description: '사용자 경험이 무엇보다 중요한 모바일 환경에서 이브닝브레드의 UX/UI 설계 능력은 고객에게 더 나은 경험을 제공합니다.',
-//         image_url: 'http://k.kakaocdn.net/dn/Q2iNx/btqgeRgV54P/VLdBs9cvyn8BJXB3o7N8UK/kakaolink40_original.png',
-//         link: {
-//             mobileWebUrl: webUrl,
-//             webUrl: webUrl,
-//         },
-//       },
-//       buttons: [{
-//         title: '자세히보기',
-//         link: {
-//           mobileWebUrl: webUrl,
-//           webUrl: webUrl,
-//         },
-//       },],
-//     })
-//   }
-// });

@@ -14,8 +14,6 @@
 <style>
     body {
         display: flex;
-        justify-content: center;
-        align-items: center;
         margin:0;
         padding:0;
         width: 100vw;
@@ -55,6 +53,9 @@
 <body>
 
     <div>
+        <h3>
+            카카오톡 메시지 API(REST API)
+        </h3>
         <button class="friends">친구목록조회</button>
         <button onclick="kakaoAuth('me')">나에게 메시지보내기</button>
 
@@ -78,7 +79,7 @@
             .catch(err => {
                 console.log(err);
             });
-            resp.then(value => console.log(value));
+            // resp.then(value => console.log(value));
 
         } catch (error) {
             
