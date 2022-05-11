@@ -56,7 +56,7 @@
 
     <div>
         <button class="friends">친구목록조회</button>
-        <button onclick="REST_Call()">나에게 메시지보내기</button>
+        <button onclick="kakaoAuth('me')">나에게 메시지보내기</button>
 
     </div>
 </body>
@@ -65,7 +65,8 @@
 
 <script type="text/javascript">
 
-    function sendMsgToMe(path) {
+    function kakaoAuth(path) {
+        
         axios.get('auth', { 
             headers: {
                 'Content-Type': 'application/json'

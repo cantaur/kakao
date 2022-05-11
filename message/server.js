@@ -64,17 +64,17 @@ app.get('/login_success', async (req, res) => {
     try {
         const respToken = await axios(obj);
         req.session.key = respToken.data.access_token;
-        console.log(req.session.key);
-        res.redirect('/send_message/me');
+        sendMessage(req.session.key);
     } catch(e){
         console.log('error');
     }
 });
 
 
-app.get('/send_message/me', (req, res) => {
+const sendMessage = (sessionKey) => {
     console.log("send message to me");
-    const token = req.session.key;
+    const token = sessionKey;
+    console.log("token : "+token);
     const webUrl = 'http://www.eveningbread.com/';
     try {
         request({
@@ -106,13 +106,14 @@ app.get('/send_message/me', (req, res) => {
             })
         }
         }, (err, r) => {
-        console.log(r.body); // result_code가 0이면 성공
+            console.log(r.body); // result_code가 0이면 성공
         });
         res.send('success');
     } catch(e) {
         console.log('error');
     }
-})
+}
+
 //http://localhost:3000/auth
 server.listen(3000, ()=>{
     console.log('서버 동작중...');

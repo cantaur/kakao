@@ -109,6 +109,7 @@ app.get('/send_message/me', (req, res) => {
         console.log(r.body); // result_code가 0이면 성공
         });
         res.send('success');
+        res.redirect('/message');
     } catch(e) {
         console.log('error');
     }
