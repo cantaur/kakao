@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta
+            name="viewport"
+            content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+    />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>알림톡 API</title>
+    <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
+</head>
+<style>
+    body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin:0;
+        padding:0;
+        width: 100vw;
+        height: 100vh;
+    }
+    div {
+      margin-bottom:100px;
+    }
+    p {
+      text-align: center;
+    }
+    .title {
+
+    }
+    span {
+      color: blue;
+      font-weight: bolder;
+    }
+    button {
+        background-color: #F7E600;
+        border:none;
+        padding:10px 16px;
+        border-radius: 4px;
+        margin:4px;
+        color: #3A1D1D;
+        cursor: pointer;
+        display: inline-block;
+        font-weight: bolder;
+        font-size: 14px;
+    }
+    button.friends {
+        background-color: #3A1D1D;
+        color: #F7E600;
+    }
+</style>
+  
+<body>
+    <div>
+        <button class="friends">친구목록조회</button>
+        <button onclick="sendMsgToMe()">나에게 메시지보내기</button>
+    </div>
+</body>
+
+ 
+
+<script type="text/javascript">
+    const sendMsgToMe = async () => {
+        const test = await fetch('/send_message/me', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        });
+        alert('메시지를 발송했습니다.');
+    }
+</script>
+
+</html>

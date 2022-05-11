@@ -1,23 +1,39 @@
-# Compiled class file
-*.class
+.bash_history
+.bash_logout
+.bashrc
+.cache
+.config
+.profile
+.ssh
+.viminfo
 
-# Log file
-*.log
+.DS_Store
+node_modules/
+/dist/
+/config/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+/test/unit/coverage/
+/test/e2e/reports/
+selenium-debug.log
+/upload/
+/firmware/
 
-# BlueJ files
-*.ctxt
+# Editor directories and files
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+db.env
+/data
+.docker
+workspace/stockalimi/api/src/firebase/
+server.log
+workspace/stockalimi/api/src/DBinfo.js
+.vim/
 
-# Mobile Tools for Java (J2ME)
-.mtj.tmp/
-
-# Package Files #
-*.jar
-*.war
-*.nar
-*.ear
-*.zip
-*.tar.gz
-*.rar
-
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
-hs_err_pid*
+sample/
+config.js

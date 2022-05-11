@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta
+            name="viewport"
+            content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+    />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>알림톡 API</title>
+    <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
+</head>
+
+  
+<body>
+    <h3>카카오링크 API</h3>
+    <a id="kakao-link-btn" href="javascript:kakaoShare()">
+        <img src="https://developers.kakao.com/assets/img/about/logos/kakaolink/kakaolink_btn_medium.png" />
+    </a>
+    <h3>카카오톡 메시지 API</h3>
+    <a id="send-to-btn" href="javascript:sendTo()">
+        <img src="//k.kakaocdn.net/14/dn/btqc6xrxbuT/7VJk7YSWITkz9K9pbXEffk/o.jpg" alt="나에게 보내기 버튼" />
+    </a>
+</body>
+
+ 
+
+<script type="text/javascript">
+    // SDK 초기화
+    Kakao.init('d8a8e6eccddc22cbe5ad326ebb8cce9e');
+    // SDK 초기화 여부를 판단
+    console.log(Kakao.isInitialized());
+    var webUrl = 'http://www.eveningbread.com/';
+
+    function kakaoShare () {
+
+        var textTypeParams = {
+            objectType: 'text',
+            text : '카카오 알림톡 미션입니다',
+            link: {
+                mobileWebUrl: 'http://www.eveningbread.com/',
+                webUrl: 'http://www.eveningbread.com/',
+            },
+            buttons: [{
+                title: '웹으로 보기',
+                link: {
+                    mobileWebUrl: 'http://www.eveningbread.com/',
+                    webUrl: 'http://www.eveningbread.com/',
+                },
+            },],
+            // 카카오톡 미설치 시 카카오톡 설치 경로이동
+            installTalk: true,
+        }
+
+        var feedTypeParams = {
+            objectType: 'feed',
+            content: {
+                title: '갓 구운 빵처럼 맛있게 구워드립니다 "맛있는 ICT 기술"',
+                description: '사용자 경험이 무엇보다 중요한 모바일 환경에서 이브닝브레드의 UX/UI 설계 능력은 고객에게 더 나은 경험을 제공합니다.',
+                imageUrl: 'https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAxOTA2MTdfMjg3%2FMDAxNTYwNzQwMDM4NzEx.yQpmGWAuwNZt5_iE3rVCftdr7zd38UElJN7isJ3p6QIg.m3GsEHU1Xy9Lila1hqWMD-iFBcWXutNNQY5DQpnOTYog.JPEG.sitaryoa%2FIMG_8316.JPG&type=a340',
+                link: {
+                    mobileWebUrl: 'http://www.eveningbread.com/',
+                    webUrl: 'http://www.eveningbread.com/',
+                },
+            },
+            buttons: [{
+                title: '자세히보기',
+                link: {
+                    mobileWebUrl: 'http://www.eveningbread.com/',
+                    webUrl: 'http://www.eveningbread.com/',
+                },
+            },],
+            // 카카오톡 미설치 시 카카오톡 설치 경로이동
+            installTalk: true,
+        }
+
+        //메시지 전송하기
+        Kakao.Link.sendDefault(feedTypeParams);
+    };
+
+
+    var params = {
+        objectType: 'feed',
+        content: {
+            title: '갓 구운 빵처럼 맛있게 구워드립니다 "맛있는 ICT 기술"',
+            description: '사용자 경험이 무엇보다 중요한 모바일 환경에서 이브닝브레드의 UX/UI 설계 능력은 고객에게 더 나은 경험을 제공합니다.',
+            image_url: 'http://k.kakaocdn.net/dn/Q2iNx/btqgeRgV54P/VLdBs9cvyn8BJXB3o7N8UK/kakaolink40_original.png',
+            link: {
+                mobileWebUrl: webUrl,
+                webUrl: webUrl,
+            },
+        },
+        buttons: [
+            {
+                title: '자세히보기',
+                link: {
+                    mobileWebUrl: webUrl,
+                    webUrl: webUrl,
+                },
+            },
+        ],
+    }
+
+    function sendTo() {
+        Kakao.Auth.login({
+            scope: 'TALK_MESSAGE', //동의항목
+            success: function() {
+                Kakao.API.request({
+                    url: '/v2/api/talk/memo/default/send', //고정
+                    data: {
+                        template_object: params,
+                    },
+                    success: function(res) {
+                        alert('success: ' + JSON.stringify(res))
+                    },
+                    fail: function(err) {
+                        alert('error: ' + JSON.stringify(err))
+                    },
+                })
+            },
+            fail: function(err) {
+                alert('failed to login: ' + JSON.stringify(err))
+            },
+        })
+    }
+
+
+</script>
+
+</html>
