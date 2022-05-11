@@ -6,6 +6,7 @@ const qs = require('qs');
 const request = require('request');
 const session = require('express-session');
 const config = require('./config.js');
+const cors = require('cors'); // 모듈추가
 
 const client_id = config.client_id;
 const redirect_uri = 'http://localhost:3000/login_success';
@@ -18,13 +19,10 @@ app.use(session({
     saveUninitialized: true,
     cookie: { secure: false }
 }));
+app.use(cors()); //사용
 
 app.get('/', (req, res) => {
     res.sendFile(__dirname+'/index.html')
-})
-
-app.get('/success', (req, res) => {
-    res.sendFile(__dirname+'/success.html')
 })
 
 app.get('/message', (req, res) => {
@@ -46,11 +44,12 @@ async function call(method, uri, param, header) {
 }
 
 app.get('/auth', (req, res) => {
-    
-    res.redirect(`https://kauth.kakao.com/oauth/authorize?client_id=${client_id}&redirect_uri=${redirect_uri}&response_type=code`);
+    console.log("kakao login start");
+    res.send(`https://kauth.kakao.com/oauth/authorize?client_id=${client_id}&redirect_uri=${redirect_uri}&response_type=code`);
 })
 
 app.get('/login_success', async (req, res) => {
+    console.log("redirect");
     const obj = {
         method: 'POST',
         url: token_uri,
@@ -65,17 +64,16 @@ app.get('/login_success', async (req, res) => {
     try {
         const respToken = await axios(obj);
         req.session.key = respToken.data.access_token;
-        res.redirect('/main');
+        console.log(req.session.key);
+        res.redirect('/send_message/me');
     } catch(e){
         console.log('error');
     }
 });
 
-app.get('/main', (req, res) => {
-    res.sendFile(__dirname+'/main.html');
-})
 
 app.get('/send_message/me', (req, res) => {
+    console.log("send message to me");
     const token = req.session.key;
     const webUrl = 'http://www.eveningbread.com/';
     try {

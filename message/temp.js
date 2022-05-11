@@ -62,7 +62,8 @@ app.get('/login_success', async (req, res) => {
     try {
         const respToken = await axios(obj);
         req.session.key = respToken.data.access_token;
-        res.redirect('/main');
+        console.log(req.session.key);
+        res.redirect('/send_message/me');
     } catch(e){
         console.log('error');
     }
