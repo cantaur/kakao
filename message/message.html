@@ -53,15 +53,34 @@
 </style>
   
 <body>
+    <a href="http://localhost:3000/auth">
+        <img src="//k.kakaocdn.net/14/dn/btqCn0WEmI3/nijroPfbpCa4at5EIsjyf0/o.jpg" width="222" />
+    </a>
     <div>
         <button class="friends">친구목록조회</button>
-        <button onclick="sendMsgToMe()">나에게 메시지보내기</button>
+        <button onclick="REST_Call()">나에게 메시지보내기</button>
     </div>
 </body>
 
  
 
 <script type="text/javascript">
+
+    function REST_Call(path) {
+        axios.get('auth', { 
+            headers: {
+                'Content-Type': 'application/json'
+            },
+         })
+        .then(({ data }) => {
+            console.log(data);
+        })
+        .catch(err => {
+            console.log(err);
+        })
+    }
+
+
     const sendMsgToMe = async () => {
         const test = fetch('/send_message/me', {
             method: 'GET',
